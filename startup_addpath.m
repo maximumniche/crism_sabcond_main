@@ -17,13 +17,17 @@ addpath(fullfile(toolbox_root_dir,'tetracorder'));
 %        '/Users/itohy1/data/MCD/MCD_v5_3/MCD5.3/mcd/matlab/', ...
 %        fullfile(toolbox_root_dir,'mcd_toolbox/'));
 
-addpath(fullfile(data_root_dir, 'MCD_6.1/mcd/interfaces/matlab'),...
+% addpath(fullfile(data_root_dir, 'MCD_6.1/mcd/interfaces/matlab'),...
+%        fullfile(data_root_dir, 'MCD5.3/mcd/matlab/'), ...
+%        fullfile(toolbox_root_dir, 'mcd_toolbox'));
+
+addpath(fullfile(data_root_dir, 'MCD5.3/mcd/matlab/'), ...
         fullfile(toolbox_root_dir, 'mcd_toolbox'));
 
 % addpath(fullfile(toolbox_root_dir,'quaternions-1.3/quaternions/'));
 
 addpath(fullfile(toolbox_root_dir,'crism_conv_hitran'));
-
+    
 run(fullfile(toolbox_root_dir,'envi','envi_startup_addpath'));
 run(fullfile(toolbox_root_dir,'continuumRemoval','cntrmvl_toolbox_startup_addpath'));
 run(fullfile(toolbox_root_dir,'pds3_toolbox','pds3_startup_addpath'));

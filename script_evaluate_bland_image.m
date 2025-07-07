@@ -76,7 +76,7 @@ valid_lines_int = find(valid_lines_int);
 %% Get/download and process bland image
 
 % Specify the observation ID of the image you want to test as bland.
-obs_id_bland = 'C0B5';
+obs_id_bland = '9A98';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;
