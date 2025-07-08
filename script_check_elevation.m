@@ -8,7 +8,7 @@
 % a rouch check.
 
 % Enter observation ID you want to test (case-insensitive)
-obs_id_test = '9A98';
+obs_id_test = '9A16';
 
 crism_obs = CRISMObservation(obs_id_test,'SENSOR_ID','L','DOWNLOAD_DDR', 2); 
 switch upper(crism_obs.info.obs_classType)
