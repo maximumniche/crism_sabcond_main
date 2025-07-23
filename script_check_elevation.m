@@ -8,7 +8,7 @@
 % a rouch check.
 
 % Enter observation ID you want to test (case-insensitive)
-obs_id_test = '9A16';
+obs_id_test = '47A3';
 
 crism_obs = CRISMObservation(obs_id_test,'SENSOR_ID','L','DOWNLOAD_DDR', 2); 
 switch upper(crism_obs.info.obs_classType)
@@ -18,5 +18,6 @@ switch upper(crism_obs.info.obs_classType)
         basenameDDR = crism_obs.info.basenameDDR;
     otherwise
 end
+
 DEdata = CRISMDDRdata(basenameDDR,''); DEdata.readimg();
 figure; imagesc(DEdata.ddr.Elevation.img);
