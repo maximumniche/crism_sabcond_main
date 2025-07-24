@@ -1,13 +1,9 @@
 %% Compare elevation of target and bland candidate.
 
-% crism_init;
-
 % Compare average elevation of target scene to bland scene using DDR data.
 % If average elevation exceeds given threshold, return false for
 % compatibleBoolean, else return true. Since elevation is not
 % deterministic, threshold should be an adequately large value.
-
-% Enter observation ID you want to test (case-insensitive)
 
 function [compatibleBoolean] = compare_elevation(target_id, bland_id, threshold)
 
@@ -41,8 +37,8 @@ elevation_bland = DEdata_bland.ddr.Elevation.img;
 % Compare altitudes
 
 % Get average altitude of target and bland image
-avg_target = sum(sum(elevation_target, 'all')) / numel(elevation_target)
-avg_bland = sum(sum(elevation_bland, 'all')) / numel(elevation_target)
+avg_target = sum(sum(elevation_target, 'all')) / numel(elevation_target);
+avg_bland = sum(sum(elevation_bland, 'all')) / numel(elevation_target);
 
 if abs(avg_target - avg_bland) > threshold
     compatibleBoolean = false; % Elevation difference exceeds threshold

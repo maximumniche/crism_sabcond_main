@@ -1,4 +1,5 @@
 function [] = startup_addpath()
+
 toolbox_root_dir = '/home/imadk/Documents/MATLAB/CRISM/toolbox';
 data_root_dir = '/home/imadk/Documents/MATLAB/CRISM/data';
 
