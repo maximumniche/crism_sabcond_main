@@ -1,6 +1,6 @@
 function [] = startup_addpath()
 toolbox_root_dir = '/home/imadk/Documents/MATLAB/CRISM/toolbox';
-interface_root_dir = '/home/imadk/Documents/MATLAB/CRISM/data';
+data_root_dir = '/home/imadk/Documents/MATLAB/CRISM/data';
 
 addpath(fullfile(toolbox_root_dir,'base'));
 addpath(fullfile(toolbox_root_dir,'sc'));
@@ -17,7 +17,7 @@ addpath(fullfile(toolbox_root_dir,'tetracorder'));
 % addpath(fullfile(data_root_dir, 'MCD5.3/mcd/matlab/'), ...
 %        fullfile(toolbox_root_dir, 'mcd_toolbox'));
 
-addpath(fullfile(interface_root_dir, 'MCD_6.1/mcd/interfaces/matlab/'), ...
+addpath(fullfile(data_root_dir, 'MCD_6.1/mcd/interfaces/matlab/'), ...
         fullfile(toolbox_root_dir, 'mcd_toolbox'));
 
 

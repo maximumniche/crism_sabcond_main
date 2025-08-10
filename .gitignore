@@ -2,3 +2,5 @@
 *.asv
 *.m~
 *.fig
+resu/
+results/

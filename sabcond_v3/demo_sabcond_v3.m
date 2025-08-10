@@ -2,13 +2,29 @@
 % crism_init;
 
 % Enter the list of observation IDs.
-obs_id_list = {'4164'};
+obs_id_list = {'C2FC'};
 
 %%
 for i=1:length(obs_id_list)
     obs_id = obs_id_list{i};
+
+    obs_info = crism_get_obs_info_v2(obs_id, 'SENSOR_ID', 'L', ...
+    'Download_DDR_CS', 2, 'Download_TRRIF_CS', 2, ...
+    'Download_TRRRA_CS', 2, 'DOWNLOAD_TRRHKP_CS', 2, ...
+    'DOWNLOAD_EDR_CS_CSDF', 2, ...
+    'DWLD_INDEX_CACHE_UPDATE', false);
+
+    % Volcano scan
+    global crism_env_vars
+    csi = obs_info.central_scan_info.indx;
+    basename_trrif_cs = obs_info.sgmnt_info(csi).L.trr.IF{1};
+    TRRIFdata = CRISMdata(basename_trrif_cs, '');
+    tic; crism_vscor(TRRIFdata,'save_file',1,'art',1,'force',0,'skip_if_exist',1, ...
+    'save_pdir',crism_env_vars.dir_TRRX,'SAVE_DIR_YYYY_DOY',true); toc;
+    
+    % Calibration
     crism_calibration_IR_v2(obs_id,'save_memory',true,'mode','yuki2', ...
-        'version','B','skip_ifexist',0,'force',0);
+        'version','B','skip_ifexist',0,'force',0, 'dwld', 2);
 end
 
 %%
@@ -23,7 +39,7 @@ precision  = 'single';
 % {'single','double'}
 % in my test, single was much faster and result is quite similar.
 
-proc_mode  = 'CPU_2'; 
+proc_mode  = 'GPU_BATCH_2'; 
 % {'CPU_1','GPU_1','CPU_2','GPU_2','GPU_BATCH_2'}
 % 'GPU_BATCH_2' is the fastest mode, if GPU is not used by others.
 % Slightly different algorithms between {'CPU_1','GPU_1'} and 

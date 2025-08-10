@@ -1,3 +1,5 @@
+function [compatibilityBool] = script_compare_images(obs_id_interest, obs_id_bland)
+
 %% Bland Image Selection
 % crism_init crismToolbox_legacy.json;
 prop_name = 'trrdif';
@@ -275,3 +277,4 @@ fname = sprintf('ln%s_c%03dt%03d_l%03dt%03d_sub_ln%s_c%03dt%03d_l%03dt%03d', ...
 % export_fig(gcf,[fname '.png'],'-transparent','-r300');
 
 
+end
