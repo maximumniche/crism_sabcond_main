@@ -1,14 +1,16 @@
-function [compatibilityBool] = script_evaluate_bland_image(obs_id_interest, obs_id_bland)
+function [compatibilityBool] = script_compare_images(obs_id_interest, obs_id_bland)
 
 %% Bland Image Selection
 % crism_init crismToolbox_legacy.json;
 prop_name = 'trrdif';
 
+threshold = 0.0006;
+
 
 %% Get/download and process target image
 
 % Specify the observation ID of the image you want to test.
-obs_id_interest = '9A16';
+obs_id_interest = '47A3';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;
@@ -78,7 +80,7 @@ valid_lines_int = find(valid_lines_int);
 %% Get/download and process bland image
 
 % Specify the observation ID of the image you want to test as bland.
-obs_id_bland = '9A98';
+obs_id_bland = '4774';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;
@@ -182,35 +184,10 @@ ld = valid_lines; % ld = 200:400;
 
 % Specify column(s) and line(s) you want to test. 
 % Same column(s) is used for the bland image.
-c=210; l=100:200; %l=205:241;
-c=292; l = 100:200;
-c=279; l=145;
-% c=134; l=51;
-c=5; l=249;
-
-
-c=80; l=97;
-c=80; l=329;
-c=80; l=202;
-
-
-c=275; %l=350;
-%c=189; %l=220:240;
-% c=80; 
 l=valid_lines_int;
-%c=130; %l=76;
-%c=72; l=72;
-%c=88; l=201;
-
-%c=362; l=75;
-c = 122; % l=179;
-c=115; % l=170:180;
-c=157;
-% ld=1:100;
-% l=450;
-% l=348:400;
-% c=248:249; % l=369:374;
 c=1:500;
+
+%{
 color_order = lines(7);
 color_order2 = [...         
          0         0    1.0000
@@ -226,6 +203,7 @@ Nc = size(color_order, 1);
 figure;
 ax = subplot(1,1,1);
 ax.ColorOrder = color_order;
+%}
 
 mag_list = sort([0.7:0.025:1.2],'descend');
 hold on;
@@ -233,22 +211,40 @@ hold on;
 gp_bland = GP1nan_bland(1,c,bands);
 gp_int = GP1nanfull_int(1,c,bands);
 
-pList = [];
+% 
+normalized_bands = mean(TRR3dataset_interest.trr3ra.wa(bands,c),[2],'omitnan');
+% bands from 1900-2200 nm, where trident feature is
+trident_indexes = find(normalized_bands > 1800 & normalized_bands < 2200);
+
+
+% pList = [];
+
 for imag = 1:length(mag_list)
+
     mag = mag_list(imag);
+    
+    %data(:, imag) = squeeze(log(mean(Yif_interest(l,c,bands),[1,2],'omitnan')) ...
+    %            - log(mean(Yif_bland(ld,c,bands),[1,2],'omitnan'))*mag);
+
+    data(:, imag) = squeeze(log(mean(Yif_interest(l,c,bands) .* gp_int,[1,2],'omitnan')) ...
+                - log(mean(Yif_bland(ld,c,bands) .* gp_bland,[1,2],'omitnan'))*mag);
+    
+%{
     plot(mean(TRR3dataset_interest.trr3ra.wa(bands,c),[2],'omitnan'),...
         squeeze(log(mean(Yif_interest(l,c,bands),[1,2],'omitnan')) ...
                 - log(mean(Yif_bland(ld,c,bands),[1,2],'omitnan'))*mag), ...
         '-', 'DisplayName', sprintf('subtrahend x %.3f',mag), 'Color', [color_order(rem(imag, Nc)+1, :), 0.2], 'LineWidth',0.3);
+
     pList(imag) = plot(mean(TRR3dataset_interest.trr3ra.wa(bands,c),[2],'omitnan'),...
         squeeze(log(mean(Yif_interest(l,c,bands) .* gp_int,[1,2],'omitnan')) ...
                 - log(mean(Yif_bland(ld,c,bands) .* gp_bland,[1,2],'omitnan'))*mag), ...
         '.-', 'DisplayName', sprintf('subtrahend x %.3f',mag), 'Markersize', 5, 'Color', color_order(rem(imag, Nc)+1, :));
 
-    data{imag} = squeeze(log(mean(Yif_interest(l,c,bands),[1,2],'omitnan')) ...
-        - log(mean(Yif_bland(ld,c,bands),[1,2],'omitnan'))*mag);hitr
+%}
 
 end
+
+%{
 
 legend(pList,'Location','EastOutside');
 
@@ -279,6 +275,41 @@ fname = sprintf('ln%s_c%03dt%03d_l%03dt%03d_sub_ln%s_c%03dt%03d_l%03dt%03d', ...
     TRR3dataset_bland.(prop_name).basename,c(1),c(end),ld(1),ld(end));
 
 % export_fig(gcf,[fname '.png'],'-transparent','-r300');
+
+%}
+
+%% Find the RMSE of line and data comparison to determine if images are compatible
+
+% Create y-values of a straight line from 1800 nm to 2100nm for each column
+for i=1:length(mag_list)
+
+y(:,i) = linspace(data(trident_indexes(1), i), data(trident_indexes(end), i), length(trident_indexes));
+
+end
+
+% Get values of data from 1800nm to 2100nm
+yreal = data(trident_indexes, :);
+
+% Subtract arrays
+compare = yreal - y;
+
+% plot(yreal)
+% plot(y)
+
+% Calculate RMSE for each mag value
+for i=1:length(mag_list)
+
+    rmse(i) = sqrt ( sum( compare(:, i) .^ 2 ) ) / length(trident_indexes);
+
+end
+
+rmse_min = min(rmse);
+
+if rmse_min < threshold
+    compatibilityBool = true;
+else
+    compatibilityBool = false;
+
 
 
 end

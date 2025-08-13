@@ -1,7 +1,6 @@
-function [blandBool] = script_determine_blandness(obs_id)
+%% Function to check if a given observation is bland
 
-%% Check the overall spectral shapes ... to see if the spectra are bland or not.
-% crism_init;
+function [blandBool] = script_determine_blandness(obs_id)
 
 %% Set up some inputs
 global crism_env_vars
@@ -19,7 +18,6 @@ DWLD_INDEX_CACHE_UPDATE = false;
 pdir = './resu/';
 
 %% Set up v3 correction variables
-%%
 % OPTIONS for sabcond
 %
 % -------------------------------------------------------------------------
@@ -77,7 +75,6 @@ bands_opt    = 6;
 % Magic number for wavelength channels to be used. This is the input for 
 % [bands] = genBands(bands_opt)
 
-%%
 % -------------------------------------------------------------------------
 %                               Minor Options
 % -------------------------------------------------------------------------

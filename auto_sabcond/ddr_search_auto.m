@@ -3,7 +3,7 @@
 % Function to search for close in time images within a given tolerance.
 % Takes a previous list of images as input to filter duplicates
 
-function [ddr_polygons_slctd] = ddr_search_auto(prev_tolerance)
+function [ddr_polygons_slctd] = ddr_search_auto(obs_id, tol_days, prev_tol)
 
 % Load Polygons
 load ddr_polygons_wutc.mat
@@ -13,10 +13,14 @@ load ddr_polygons_ATO_wutc.mat
 % Enter directory name: 3-letter observsation class type + zero padded 8 
 % digit observation ID. The polygonal footprint of this image will be 
 % shown in red in the map projection.
-dirname_tar = 'FRT0000A819';
+
+% obs_id = 'A819';
+obs_info = CRISMObservation(obs_id,'SENSOR_ID','L'); 
+dirname_tar = obs_info.info.dirname;
 
 % Provide Time difference tolerance in days
-tol_days = 7;
+% tol_days = 7;
+% prev_tol = 4;
 
 % Modify the following distance threshold value if you want to apply
 % spatially close images.
@@ -67,21 +71,36 @@ else
     projection_method = 'equirectangular';
 end
 
-%% Get rid of what was in previous list
-
-
-
 %% Apply time tolerance
 
 tol_duration = calendarDuration(0,0,tol_days);
-idx_slctd = find(and(polygon_tar.time - tol_duration < [ddr_polygons.time], ...
-    [ddr_polygons.time] < polygon_tar.time + tol_duration));
+
+prev_duration = calendarDuration(0,0,prev_tol);
+
+% Select for indexes in tolerance range and outside of previous tolerance
+
+% In tolerance range
+idx_slctd_tol = find(and(...
+    polygon_tar.time - (tol_duration) < [ddr_polygons.time], ...
+    [ddr_polygons.time] < polygon_tar.time + (tol_duration) ...
+    ));
+
+% In previous tolerance range
+idx_slctd_prev = find(and(...
+    polygon_tar.time - (prev_duration) < [ddr_polygons.time], ...
+    [ddr_polygons.time] < polygon_tar.time + (prev_duration)...
+    ));
+
+% In the tolerance range but not in previous tolerance range
+idx_slctd = setxor(idx_slctd_tol, idx_slctd_prev);
+
 ddr_polygons_slctd = ddr_polygons(idx_slctd);
 
 % sort ddr_polygons_slctd by time
 timestamps = [ddr_polygons_slctd.time];
 [~, idx_srtt] = sort(timestamps);
 ddr_polygons_slctd = ddr_polygons_slctd(idx_srtt);
+
 %% Apply observation class type filter
 
 if isempty(obs_class_type_allowed)
@@ -100,7 +119,7 @@ obs_class_type_ptrn = ['(' strjoin(obs_class_type_allowed,'|') ')'];
 mtch = regexpi({ddr_polygons_slctd.dirname}, obs_class_type_ptrn);
 idx_slctd = find(~isempties(mtch));
 ddr_polygons_slctd = ddr_polygons_slctd(idx_slctd);
-%%
+
 if isempty(latitude_range)
     switch upper(projection_method)
         case 'EQUIRECTANGULAR'
@@ -116,6 +135,7 @@ end
 
 idx_slctd = find(and(latitude_range(1) < [ddr_polygons_slctd.lat_ctr], ...
     [ddr_polygons_slctd.lat_ctr] < latitude_range(2)));
+
 ddr_polygons_slctd = ddr_polygons_slctd(idx_slctd);
 
 end

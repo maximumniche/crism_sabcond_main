@@ -4,24 +4,28 @@
 %
 function [] = auto_script()
 
-% VARIABLE SETUP (Will convert to function parameters later
-
+% VARIABLE SETUP (Will convert to function parameters later)
 target_image = '9A16';
-
+skip_hitran = true;
 
 % Run startup_addpath to create links to toolbox and data
 startup_addpath();
 
+% Run crism_init to create global env_vars variable
+crism_init;
+
 % Run ddr_search and store output list of images in variable
 script_ddr_search_by_time_or_location_v2
 
-% With list of images, fetch derived products from crism-map
+% Run elevation check on candidates
 
+% Run script_determine_blandness on viable candidates
 
-% Evaluate best bland image
+% Run script_determine_blandness for 
 
+% Run HITRAN on valid candidate, skip if already generated
 
-% Check elevation
+% Perform SABCOND algorithm on candidate
 
 
 end
