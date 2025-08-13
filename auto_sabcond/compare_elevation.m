@@ -5,8 +5,10 @@
 % compatibleBoolean, else return true. Since elevation is not
 % deterministic, threshold should be an adequately large value.
 
-function [compatibleBoolean] = compare_elevation(target_id, bland_id, threshold)
+function [compatibleBoolean] = compare_elevation(target_id, bland_id)
 
+% Threshold for difference between altitudes
+threshold = 10^3;
 
 crism_obs_target = CRISMObservation(target_id,'SENSOR_ID','L','DOWNLOAD_DDR', 2); 
 crism_obs_bland = CRISMObservation(bland_id,'SENSOR_ID','L','DOWNLOAD_DDR', 2);
