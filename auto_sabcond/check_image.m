@@ -1,6 +1,6 @@
 
 %% check the results
-obs_id = '47A3';
+obs_id = '4774';
 crism_obs = CRISMObservation(obs_id,'sensor_id','L');
 TRR3dataset = CRISMTRRdataset(crism_obs.info.basenameIF,'');
 pdir5 = './results/';

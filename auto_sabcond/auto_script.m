@@ -1,8 +1,8 @@
 %% Script to automate SABCOND V5
 
 %% VARIABLE SETUP
-target_images = {'9A16'};
-skip_hitran = true; % whether you want to skip HITRAN or not, only eligible
+target_images = {'75A9'};
+skip_hitran = false; % whether you want to skip HITRAN or not, only eligible
                     % if HITRAN profile is already generated
 tolerance = 1; % initial tolerance for ddr search
 prev_tolerance = 0; % tolerance you don't want to go below initially
@@ -107,7 +107,8 @@ for image_index=1:length(target_images)
         disp("Performing SABCOND on " + string(target_image) + " with " + string(best_candidate));
         run_sabcondv5(best_candidate, target_image);
     
-        %%
+        %% Delete everything in v3_results
+        delete('./v3_results/*')
         
         break;
     

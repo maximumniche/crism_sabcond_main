@@ -4,9 +4,10 @@ function [] = run_sabcondv5(bland_id, target_id)
 % bland_id = '4774';
 % target_id = '47A3';
 
-hitran_path = '/home/imadk/Documents/MATLAB/CRISM/HITRAN/mars_hitran';
+hitran_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/mars_hitran';
 T_path = '/home/imadk/data/T';
 results_path = './v5_results';
+bland_results_path = './v5_bland_results';
 
 
 %% Batch processing of convolution.
@@ -36,7 +37,7 @@ TRRIFdata_ref = CRISMdata(crism_obs_ref.info.basenameIF,'');
     'debug', false,...
     'lambda_update_rule', 'L1SUM',...
     'SAVE_FILE',true, 'additional_suffix', 'mcd6_1s01',...
-    'save_pdir',results_path,...
+    'save_pdir',bland_results_path,...
     'T_UPDATE', 2, 'logT_neg', false, 'opt_bands_ignore_init', 'none', ...
     'include_ice', true);
 
