@@ -1,4 +1,4 @@
-function [compatibilityBool] = script_compare_images(obs_id_interest, obs_id_bland)
+function [compatibilityBool, rmse_min] = script_compare_images(obs_id_interest, obs_id_bland)
 
 %% Bland Image Selection
 % crism_init crismToolbox_legacy.json;
@@ -10,7 +10,7 @@ threshold = 0.0006;
 %% Get/download and process target image
 
 % Specify the observation ID of the image you want to test.
-obs_id_interest = '47A3';
+% obs_id_interest = '47A3';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;
@@ -80,7 +80,7 @@ valid_lines_int = find(valid_lines_int);
 %% Get/download and process bland image
 
 % Specify the observation ID of the image you want to test as bland.
-obs_id_bland = '4774';
+% obs_id_bland = '4774';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;

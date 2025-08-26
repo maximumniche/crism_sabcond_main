@@ -22,16 +22,6 @@ dirname_tar = obs_info.info.dirname;
 % tol_days = 7;
 % prev_tol = 4;
 
-% Modify the following distance threshold value if you want to apply
-% spatially close images.
-% the images within the distance less than this value would be selected.
-% Enter Inf if you want to skip this selection.
-dst_threshold = inf;
-% This distance in the map-projected coordinate system.
-% For equirectangular projection, X axis is measured by longitude in
-% degrees and Y axis is by latitude in degrees.
-% For stereographic projection, sorry, not sure. 
-
 % obs_class_type
 % You can specify the type of observations you want to match.
 % If none given, full resolution types (FRT, FRS, ATO) are selected for

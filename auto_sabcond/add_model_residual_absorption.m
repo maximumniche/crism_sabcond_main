@@ -5,9 +5,9 @@ function [] = add_model_residual_absorption(dataset, obs_id)
 
     crism_obs = CRISMObservation(obs_id,'sensor_id','L');
     TRR3dataset = CRISMTRRdataset(crism_obs.info.basenameIF,'');
-    
-    dataset.AB.wa = TRR3dataset.catif.wa;
-    dataset.Bg.wa = TRR3dataset.catif.wa;
+
+    dataset.AB.wa = TRR3dataset.trrbif.wa;
+    dataset.Bg.wa = TRR3dataset.trrbif.wa;
     
     AB_data = dataset.AB.readimg();
     Bg_data = dataset.Bg.readimg();
