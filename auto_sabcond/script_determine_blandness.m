@@ -6,7 +6,7 @@ function [blandBool] = script_determine_blandness(obs_id)
 global crism_env_vars
 
 % Enter observation ID you want to test (case-insensitive)
-% obs_id = '9A98';
+% obs_id = '1EC41';
 
 % Set dwld option to 2 if you need to download the data
 dwld = 2; 
@@ -16,6 +16,10 @@ dwld = 2;
 DWLD_INDEX_CACHE_UPDATE = false;
 
 pdir = './v3_results/';
+
+% Threshold values for noise rmse and absorption average
+threshold_noise = 0.005;
+threshold_absorption = 0.01;
 
 %% Set up v3 correction variables
 % OPTIONS for sabcond
@@ -40,7 +44,7 @@ batch_size = 10;
 % 'GPU_BATCH_*' mode is selected.
 
 % ## I/O OPTIONS #---------------------------------------------------------
-save_pdir = './resu/';
+save_pdir = pdir;
 % character, string
 % root directory path where the processed data are stored. The processed 
 % image will be saved at <SAVE_PDIR>/CCCNNNNNNNN, where CCC the class type 
@@ -136,7 +140,7 @@ lambda_a = 0.01;
 obs_info = crism_get_obs_info_v2(obs_id, 'SENSOR_ID', 'L', ...
     'Download_DDR_CS', dwld, 'Download_TRRIF_CS', dwld, ...
     'Download_TRRRA_CS', dwld, 'DOWNLOAD_TRRHKP_CS', dwld, ...
-    'DOWNLOAD_EDR_CS_CSDF', 2, ...
+    'DOWNLOAD_EDR_CS_CSDF', dwld, ...
     'DWLD_INDEX_CACHE_UPDATE', DWLD_INDEX_CACHE_UPDATE);
 
 % Central scan index
@@ -144,30 +148,20 @@ csi = obs_info.central_scan_info.indx;
 % filename (w/o extension) or the central scan image.
 basename_trrif_cs = obs_info.sgmnt_info(csi).L.trr.IF{1};
 TRRIFdata = CRISMdata(basename_trrif_cs, '');
-basename_trrra_cs = obs_info.sgmnt_info(csi).L.trr.RA{1};
-TRRRAdata = CRISMdata(basename_trrra_cs,'');
 TRRIFdata.readWAi();
-% TRRIFdata.set_rgb();
 
-% Calibration in our code
-% -----------------------
-obs_info = crism_get_obs_info_v2(obs_id, 'SENSOR_ID', 'L', ...
-    'Download_DDR_CS', dwld, 'Download_TRRIF_CS', dwld, ...
-    'Download_TRRRA_CS', dwld, 'DOWNLOAD_TRRHKP_CS', dwld, ...
-    'DOWNLOAD_EDR_CS_CSDF', dwld, ...
-    'DWLD_INDEX_CACHE_UPDATE', DWLD_INDEX_CACHE_UPDATE);
-% TRRD I/F:
+% TRRB I/F:
 % calibration processed by our own code with mode 'yuki4', no bad pixel 
 % interpolation is applied to SPdata, too. Flat field correction is not 
 % applied, neither. This is the default option used for sabcond v5 
 % correction.
 crism_calibration_IR_v2(obs_id,'save_memory',true,'mode','yuki4', ...
-    'version','B','skip_ifexist',1,'force',0,'save_file',1,'dwld',dwld, ...
+    'version','D','skip_ifexist',1,'force',0,'save_file',1,'dwld',dwld, ...
     'DWLD_INDEX_CACHE_UPDATE',DWLD_INDEX_CACHE_UPDATE);
 
 %% CRISM SABCONDV3 Processing
 
-if isfolder(fullfile('v3_results', obs_id)) % Only run v3 if processed image doesn't exist
+if ~isfolder(fullfile('v3_results', obs_id)) % Only run v3 if processed image doesn't exist
 
     result = ...
         sabcondv3_pub_water_ice_test(obs_id,3,'t_mode',t_mode,'lambda_a',lambda_a,...
@@ -238,10 +232,6 @@ h = ENVIRasterMultview({TRRIFdata.RGB.CData_Scaled}, ...
 %}
 
 %% Calculate blandness by absorption of column percentile and rmse noise
-
-% Threshold values for noise rmse and absorption average
-threshold_noise = 0.005;
-threshold_absorption = 0.01;
 
 % Read absorption and noise data from sabcond V3 data
 absorption = sabcond_data3.absorption.readimg();

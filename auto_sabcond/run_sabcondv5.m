@@ -79,31 +79,5 @@ TRRIFdata_ref = CRISMdata(crism_obs_ref.info.basenameIF,'');
 
 % a means fixed for bad spectra
 
-%% Post Processing
-
-%%
-obs_id = target_id;
-obs_info = crism_get_obs_info_v2(obs_id,'download_trrif_cs',2);
-csi = obs_info.central_scan_info.indx;
-TRR3dataset = CRISMTRRdataset(obs_info.sgmnt_info(csi).L.trr.IF{1},'');
-TRR3dataset.trr3if.load_basenamesCDR();
-WAdata = TRR3dataset.trr3if.readCDR('WA'); WAdata.readimgi();
-bands = crmsab_genBands_v2(WAdata.prop.wavelength_filter,6,WAdata.prop.binning,WAdata.prop.sclk);
-
-pdir5 = results_path;
-dir_sab5 = joinPath(pdir5,TRR3dataset.trr3if.dirname);
-sabcond_data5_1 = SABCONDdataset(TRR3dataset.trrdif.basename,dir_sab5,...
-    'suffix','sabcondpub_v1_mcd6_1s01_47A3');
-%% photometric correction
-DEdata = CRISMDDRdata(obs_info.sgmnt_info(csi).L.ddr.DE{1}, '');
-crism_photocor_wrapper(sabcond_data5_1.nr_ds, DEdata);
-
-%% Replace values
-sabcond5_1_nr_ds_pht1 = CRISMdataCAT(...
-    [sabcond_data5_1.nr_ds.basename, '_phot1'], ...
-    sabcond_data5_1.nr_ds.dirpath);
-
-crism_replace_value_wrapper(sabcond5_1_nr_ds_pht1);
-
 
 end

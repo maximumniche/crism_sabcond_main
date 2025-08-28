@@ -6,10 +6,15 @@
 % deterministic, threshold should be an adequately large value.
 
 function [compatibleBoolean] = compare_elevation(target_id, bland_id)
+%%
+
+% target_id = '9A16';
+% bland_id = '9A98';
 
 % Threshold for difference between altitudes
 threshold = 10^3;
 
+% Download DDR data which contains elevation
 crism_obs_target = CRISMObservation(target_id,'SENSOR_ID','L','DOWNLOAD_DDR', 2); 
 crism_obs_bland = CRISMObservation(bland_id,'SENSOR_ID','L','DOWNLOAD_DDR', 2);
 

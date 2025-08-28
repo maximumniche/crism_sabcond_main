@@ -1,10 +1,10 @@
 %% Script to automate SABCOND V5
-% breadth first search esque way of finding best candidate
+% depth first search esque way of finding best candidate
 
 %% VARIABLE SETUP
-target_images = {'9A16', '20913'};
+target_images = {'A280'};
 skip_hitran = false; % whether you want to skip HITRAN or not, only eligible
-                    % if HITRAN profile is already generated
+                    % if HITRAN profiles are already generated
 tolerance = 1; % initial tolerance for ddr search
 prev_tolerance = 0; % tolerance you don't want to go below initially
 tolerance_step = 1; % step for tolerance
@@ -62,50 +62,31 @@ for image_index=1:length(target_images)
             continue; % jump back to beginning of loop
         end
         
-        %% Run script_determine_blandness on viable candidates
+        %% Determine blandness and compatibility of candidates
+        % Choose the first bland and compatible candidate
         
         compatible = [];
+        bland = [];
         
         for i=1:length(viable_candidates)
-        
-            compatible(i) = script_determine_blandness(viable_candidates{i});
-        
-        end
-        
-        viable_candidates = viable_candidates(logical(compatible));
 
-        %% If no candidates, loop back with new toleraences
-    
-        if isempty(viable_candidates)
-            continue; % jump back to beginning of loop
-        end
-        
-        %% Run script_compare_images on bland candidates to determine best fit
-        
-        compatible = [];
-        rmse = [];
-        
-        for i=1:length(viable_candidates)
-        
-            [compatible(i), rmse(i)] = script_compare_images(target_image, viable_candidates{i});
+            bland(i) = script_determine_blandness(viable_candidates{i});
+            [compatible(i), ~] = script_compare_images(target_image, viable_candidates{i});
+
+            if logical(bland(i)) && logical(compatible(i))
+                compatible_candidate = viable_candidates{i};
+                break;
+            end
         
         end
-    
-    
-        rmse = rmse(logical(compatible));
-        viable_candidates = viable_candidates(logical(compatible));
+
+        viable_candidates = viable_candidates(logical(bland) & logical(compatible));
     
         %% If no candidates, loop back with new toleraences
     
         if isempty(viable_candidates)
             continue; % jump back to beginning of loop
         end
-    
-       
-        %% Select the best candidate based on minimum RMSE
-        [~, best_index] = min(rmse);
-        best_candidate = viable_candidates{best_index};
-        disp("Best candidate is " + string(best_candidate));
         
         
         %% Run HITRAN on valid candidate, skip if already generated
@@ -113,14 +94,14 @@ for image_index=1:length(target_images)
         if skip_hitran == false
     
             disp("Running HITRAN...");
-            run_hitran(best_candidate);
+            run_hitran(compatible_candidate);
         
         end
         
         %% Perform SABCOND algorithm on candidate
     
-        disp("Performing SABCOND on " + string(target_image) + " with " + string(best_candidate));
-        run_sabcondv5(best_candidate, target_image);
+        disp("Performing SABCOND on " + string(target_image) + " with " + string(compatible_candidate));
+        run_sabcondv5(compatible_candidate, target_image);
     
         %% Delete everything in v3_results
 
