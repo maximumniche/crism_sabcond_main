@@ -2,7 +2,7 @@
 % depth first search esque way of finding best candidate
 
 %% VARIABLE SETUP
-target_images = {'A280'};
+target_images = {'5C5E', '3E12'};
 skip_hitran = false; % whether you want to skip HITRAN or not, only eligible
                     % if HITRAN profiles are already generated
 tolerance = 1; % initial tolerance for ddr search
@@ -49,8 +49,16 @@ for image_index=1:length(target_images)
         compatible = [];
         
         for i=1:length(viable_candidates)
+
+            try
         
-            compatible(i) = compare_elevation(target_image, viable_candidates{i});
+                compatible(i) = compare_elevation(target_image, viable_candidates{i});
+
+            catch % If error thrown, just ignore candidate
+                
+                compatible(i) = 0;
+
+            end
         
         end
         
@@ -70,14 +78,22 @@ for image_index=1:length(target_images)
         
         for i=1:length(viable_candidates)
 
-            bland(i) = script_determine_blandness(viable_candidates{i});
-            [compatible(i), ~] = script_compare_images(target_image, viable_candidates{i});
+            try
 
-            if logical(bland(i)) && logical(compatible(i))
-                compatible_candidate = viable_candidates{i};
-                break;
+                bland(i) = script_determine_blandness(viable_candidates{i});
+                [compatible(i), ~] = script_compare_images(target_image, viable_candidates{i});
+
+            catch
+                bland(i) = 0;
+                compatible(i) = 0;
+                
             end
-        
+    
+                if logical(bland(i)) && logical(compatible(i))
+                    compatible_candidate = viable_candidates{i};
+                    break;
+                end
+
         end
 
         viable_candidates = viable_candidates(logical(bland) & logical(compatible));
@@ -103,12 +119,12 @@ for image_index=1:length(target_images)
         disp("Performing SABCOND on " + string(target_image) + " with " + string(compatible_candidate));
         run_sabcondv5(compatible_candidate, target_image);
     
-        %% Delete everything in v3_results
+        %% Delete everything in v3_results if not already
 
         % MAKE SURE YOU'RE POINTING TO CORRECT FOLDER
         folders = dir('./v3_results');
 
-        for k=1:length(folders)
+        for k=3:length(folders)
 
             if ~ismember(folders(k).name, {'.','..'})
                 rmdir(fullfile(folders(k).folder, folders(k).name), 's')

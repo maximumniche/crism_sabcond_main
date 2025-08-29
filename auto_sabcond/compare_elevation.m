@@ -8,11 +8,11 @@
 function [compatibleBoolean] = compare_elevation(target_id, bland_id)
 %%
 
-% target_id = '9A16';
-% bland_id = '9A98';
+% target_id = 'A280';
+% bland_id = 'A385';
 
 % Threshold for difference between altitudes
-threshold = 10^3;
+threshold = 10^4;
 
 % Download DDR data which contains elevation
 crism_obs_target = CRISMObservation(target_id,'SENSOR_ID','L','DOWNLOAD_DDR', 2); 

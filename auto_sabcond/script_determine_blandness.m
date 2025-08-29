@@ -6,7 +6,7 @@ function [blandBool] = script_determine_blandness(obs_id)
 global crism_env_vars
 
 % Enter observation ID you want to test (case-insensitive)
-% obs_id = '1EC41';
+% obs_id = 'A245';
 
 % Set dwld option to 2 if you need to download the data
 dwld = 2; 
@@ -18,8 +18,8 @@ DWLD_INDEX_CACHE_UPDATE = false;
 pdir = './v3_results/';
 
 % Threshold values for noise rmse and absorption average
-threshold_noise = 0.005;
-threshold_absorption = 0.01;
+threshold_noise = 0.01;
+threshold_absorption = 0.0150;
 
 %% Set up v3 correction variables
 % OPTIONS for sabcond
@@ -156,7 +156,7 @@ TRRIFdata.readWAi();
 % applied, neither. This is the default option used for sabcond v5 
 % correction.
 crism_calibration_IR_v2(obs_id,'save_memory',true,'mode','yuki4', ...
-    'version','D','skip_ifexist',1,'force',0,'save_file',1,'dwld',dwld, ...
+    'version','B','skip_ifexist',1,'force',0,'save_file',1,'dwld',dwld, ...
     'DWLD_INDEX_CACHE_UPDATE',DWLD_INDEX_CACHE_UPDATE);
 
 %% CRISM SABCONDV3 Processing
@@ -209,25 +209,24 @@ add_model_residual_absorption(sabcond_data3, obs_id)
 %% Plot data (for testing)
 
 %{
-
 % Convert CATIF wavelengths to micrometers
-TRR3dataset.catif.wa = TRR3dataset.catif.wa / 1000;
-TRR3dataset.catif.readWAi_fromCRISMdata_parent();
+TRR3dataset.trrdif.wa = TRR3dataset.trrdif.wa ;
+sabcond_data3.nr_ds.set_rgb()
 
 % Assign CATIF wavelengths to everything else
-sabcond_data3.residual.wa = TRR3dataset.catif.wa;
-sabcond_data3.absorption.wa = TRR3dataset.catif.wa;
+sabcond_data3.residual.wa = TRR3dataset.trrdif.wa;
+sabcond_data3.absorption.wa = TRR3dataset.trrdif.wa;
 
 
 % Show in the interactive window
-h = ENVIRasterMultview({TRRIFdata.RGB.CData_Scaled}, ...
+h = ENVIRasterMultview({sabcond_data3.nr_ds.RGB.CData_Scaled}, ...
     {...{TRR3dataset.catif,'name','CAT IF','AVERAGE_WINDOW',[3,3]},...
      ...{TRR3dataset.catraif,'name','CAT RA IF','AVERAGE_WINDOW',[1,1]},...
      ...{TRR3dataset.trr3raif,'name','TRR3RAIF','AVERAGE_WINDOW',[1,1]},...
-     {sabcond_data3.residual,'name','SABCOND3','AVERAGE_WINDOW',[3,3]},...
-     {sabcond_data3.absorption}
+     {sabcond_data3.absorption,'name','absorption','AVERAGE_WINDOW',[3,3]},...
+     ...{sabcond_data3.absorption}
      } ,...
-    'SPC_XLim',[1000 2660],'VARARGIN_IMAGESTACKVIEW',{'Ydir','reverse'});
+    'SPC_XLim',[1100 2600],'VARARGIN_IMAGESTACKVIEW',{'Ydir','reverse'});
 
 %}
 
@@ -270,10 +269,6 @@ else % If not, check absorption_avg
     end
 
 end
-
-
-
-
 
 
 end
