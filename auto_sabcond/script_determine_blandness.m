@@ -6,7 +6,7 @@ function [blandBool] = script_determine_blandness(obs_id)
 global crism_env_vars
 
 % Enter observation ID you want to test (case-insensitive)
-% obs_id = 'A245';
+% obs_id = '3156';
 
 % Set dwld option to 2 if you need to download the data
 dwld = 2; 
@@ -15,11 +15,12 @@ dwld = 2;
 % index.html in the folder, set this to true
 DWLD_INDEX_CACHE_UPDATE = false;
 
-pdir = './v3_results/';
+pdir = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v3_results';
 
 % Threshold values for noise rmse and absorption average
 threshold_noise = 0.01;
-threshold_absorption = 0.0150;
+threshold_absorption = 0.0045;
+threshold_fraction = 0.10;
 
 %% Set up v3 correction variables
 % OPTIONS for sabcond
@@ -148,7 +149,10 @@ csi = obs_info.central_scan_info.indx;
 % filename (w/o extension) or the central scan image.
 basename_trrif_cs = obs_info.sgmnt_info(csi).L.trr.IF{1};
 TRRIFdata = CRISMdata(basename_trrif_cs, '');
+TRRIFdata.load_basenamesCDR('dwld', dwld);
 TRRIFdata.readWAi();
+
+%%
 
 % TRRB I/F:
 % calibration processed by our own code with mode 'yuki4', no bad pixel 
@@ -161,39 +165,36 @@ crism_calibration_IR_v2(obs_id,'save_memory',true,'mode','yuki4', ...
 
 %% CRISM SABCONDV3 Processing
 
-if ~isfolder(fullfile('v3_results', obs_id)) % Only run v3 if processed image doesn't exist
-
-    result = ...
-        sabcondv3_pub_water_ice_test(obs_id,3,'t_mode',t_mode,'lambda_a',lambda_a,...
-            'opt_img',opt_img,'OPTBP',optBP,'nIter',nIter,'Bands_Opt',bands_opt,...
-            'PROC_MODE',proc_mode,'precision',precision, ...
-            'library_opt',library_opt, ...
-            'OPT_CRISMSPCLIB', optCRISMspclib, 'OPT_RELAB', optRELAB, ...
-            'OPT_CRISMTYPELIB',optCRISMTypeLib,'OPT_SPLIBUSGS',optUSGSsplib, ...
-            'WEIGHT_MODE',0,'cal_bias_cor',0);
-    fprintf('water_ice_result: %d\n',result.presence_H2Oice);
-    fprintf('water_ice_exist: %f\n',mean(result.presence_H2Oice_columns,'omitnan'));
-    if result.presence_H2Oice
-        sabcondv3_pub(obs_id,'t_mode',t_mode,'lambda_a',lambda_a,'opt_img',opt_img,...
-            'OPTBP',optBP,'nIter',nIter,'Bands_Opt',bands_opt,'SAVE_PDIR',save_pdir,...
-            'additional_suffix',additional_suffix,'force',force,'skip_ifexist',skip_ifexist,...
-            'PROC_MODE',proc_mode,'precision',precision,'OPT_ICELIB',3, ...
-            'library_opt',library_opt, ...
-            'OPT_CRISMSPCLIB', optCRISMspclib, 'OPT_RELAB', optRELAB, ...
-            'OPT_CRISMTYPELIB',optCRISMTypeLib,'OPT_SPLIBUSGS',optUSGSsplib, ...
-            'WEIGHT_MODE',0,'cal_bias_cor',0);
-    else
-        sabcondv3_pub(obs_id,'t_mode',t_mode,'lambda_a',lambda_a,'opt_img',opt_img,...
-           'OPTBP',optBP,'nIter',nIter,'Bands_Opt',bands_opt,'SAVE_PDIR',save_pdir,...
-           'additional_suffix',additional_suffix,'force',force,'skip_ifexist',skip_ifexist,...
-           'PROC_MODE',proc_mode,'precision',precision,...
-           'library_opt',library_opt, ...
-           'OPT_CRISMSPCLIB', optCRISMspclib, 'OPT_RELAB', optRELAB, ...
-           'OPT_CRISMTYPELIB',optCRISMTypeLib,'OPT_SPLIBUSGS',optUSGSsplib, ...
-           'WEIGHT_MODE',0,'cal_bias_cor',0);
-    end
-
+result = ...
+    sabcondv3_pub_water_ice_test(obs_id,3,'t_mode',t_mode,'lambda_a',lambda_a,...
+        'opt_img',opt_img,'OPTBP',optBP,'nIter',nIter,'Bands_Opt',bands_opt,...
+        'PROC_MODE',proc_mode,'precision',precision, ...
+        'library_opt',library_opt, ...
+        'OPT_CRISMSPCLIB', optCRISMspclib, 'OPT_RELAB', optRELAB, ...
+        'OPT_CRISMTYPELIB',optCRISMTypeLib,'OPT_SPLIBUSGS',optUSGSsplib, ...
+        'WEIGHT_MODE',0,'cal_bias_cor',0);
+fprintf('water_ice_result: %d\n',result.presence_H2Oice);
+fprintf('water_ice_exist: %f\n',mean(result.presence_H2Oice_columns,'omitnan'));
+if result.presence_H2Oice
+    sabcondv3_pub(obs_id,'t_mode',t_mode,'lambda_a',lambda_a,'opt_img',opt_img,...
+        'OPTBP',optBP,'nIter',nIter,'Bands_Opt',bands_opt,'SAVE_PDIR',save_pdir,...
+        'additional_suffix',additional_suffix,'force',force,'skip_ifexist',skip_ifexist,...
+        'PROC_MODE',proc_mode,'precision',precision,'OPT_ICELIB',3, ...
+        'library_opt',library_opt, ...
+        'OPT_CRISMSPCLIB', optCRISMspclib, 'OPT_RELAB', optRELAB, ...
+        'OPT_CRISMTYPELIB',optCRISMTypeLib,'OPT_SPLIBUSGS',optUSGSsplib, ...
+        'WEIGHT_MODE',0,'cal_bias_cor',0);
+else
+    sabcondv3_pub(obs_id,'t_mode',t_mode,'lambda_a',lambda_a,'opt_img',opt_img,...
+       'OPTBP',optBP,'nIter',nIter,'Bands_Opt',bands_opt,'SAVE_PDIR',save_pdir,...
+       'additional_suffix',additional_suffix,'force',force,'skip_ifexist',skip_ifexist,...
+       'PROC_MODE',proc_mode,'precision',precision,...
+       'library_opt',library_opt, ...
+       'OPT_CRISMSPCLIB', optCRISMspclib, 'OPT_RELAB', optRELAB, ...
+       'OPT_CRISMTYPELIB',optCRISMTypeLib,'OPT_SPLIBUSGS',optUSGSsplib, ...
+       'WEIGHT_MODE',0,'cal_bias_cor',0);
 end
+
 
 %% Determine blandness with RMSE Noise (cor - model) and absorption (Ab*Bg*Ice)
 
@@ -203,19 +204,20 @@ dir_sab3 = joinPath(pdir,TRR3dataset.trr3if.dirname);
 sabcond_data3 = SABCONDdataset(TRR3dataset.trrbif.basename, dir_sab3,...
     'suffix', 'sabcondpub_v1');
 
+%%
+
 % Add noise residuals and absorption data
 add_model_residual_absorption(sabcond_data3, obs_id)
 
 %% Plot data (for testing)
 
 %{
-% Convert CATIF wavelengths to micrometers
-TRR3dataset.trrdif.wa = TRR3dataset.trrdif.wa ;
+
+sabcond_data3.nr_ds.wa = TRR3dataset.trrbif.wa;
 sabcond_data3.nr_ds.set_rgb()
 
-% Assign CATIF wavelengths to everything else
-sabcond_data3.residual.wa = TRR3dataset.trrdif.wa;
-sabcond_data3.absorption.wa = TRR3dataset.trrdif.wa;
+
+sabcond_data3.absorption.wa = TRR3dataset.trrbif.wa;
 
 
 % Show in the interactive window
@@ -224,7 +226,7 @@ h = ENVIRasterMultview({sabcond_data3.nr_ds.RGB.CData_Scaled}, ...
      ...{TRR3dataset.catraif,'name','CAT RA IF','AVERAGE_WINDOW',[1,1]},...
      ...{TRR3dataset.trr3raif,'name','TRR3RAIF','AVERAGE_WINDOW',[1,1]},...
      {sabcond_data3.absorption,'name','absorption','AVERAGE_WINDOW',[3,3]},...
-     ...{sabcond_data3.absorption}
+     ...{sabcond_data3.nr_ds}
      } ,...
     'SPC_XLim',[1100 2600],'VARARGIN_IMAGESTACKVIEW',{'Ydir','reverse'});
 
@@ -239,6 +241,14 @@ residuals = sabcond_data3.residual.readimg();
 % Calculate noise RMSE
 rmse_noise = sqrt(mean((residuals(:)).^2, 'omitnan'));
 
+
+% Calculate a fractional count of strong pixels
+absorption_wavelengths = squeeze(mean(absorption, 3, 'omitnan')); % Calculate avg of absorption wavelengths
+strong = absorption_wavelengths(absorption_wavelengths > threshold_absorption);
+strong_fraction = numel(strong) / numel(absorption_wavelengths);
+
+%{
+
 % Calculate an average absorption
 absorption_rows = squeeze(prctile(absorption, 95, 1)); % Take highest percentile
 % of columns (across track)
@@ -246,8 +256,7 @@ absorption_avg = squeeze(median(absorption_rows, 1, 'omitnan')); % From best col
 % get the median absorption for all wavelengths across rows
 absorption_avg = mean(absorption_avg, 'omitnan'); % get mean of wavelengths
 
-% rmse_noise
-% absorption_avg
+%}
 
 % Determine if image is bland based on two values
 if rmse_noise > threshold_noise % If noise RMSE is greater than noise threshold,
@@ -259,8 +268,7 @@ if rmse_noise > threshold_noise % If noise RMSE is greater than noise threshold,
 else % If not, check absorption_avg
 
     
-    if absorption_avg < threshold_absorption % If absorption less than threshold,
-        % image is bland
+    if strong_fraction < threshold_fraction % If fraction of strong pixels is less than threshold, bland
         blandBool = true;
         % disp("Image is bland")
     else % If not, nonbland
@@ -270,5 +278,4 @@ else % If not, check absorption_avg
 
 end
 
-
-end
+%end

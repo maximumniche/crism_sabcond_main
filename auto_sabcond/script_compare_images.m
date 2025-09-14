@@ -185,7 +185,8 @@ ld = valid_lines; % ld = 200:400;
 % Specify column(s) and line(s) you want to test. 
 % Same column(s) is used for the bland image.
 l=valid_lines_int;
-c=1:500;
+c=1:size(lnYif_bland, 2);
+
 
 %{
 color_order = lines(7);
@@ -203,6 +204,7 @@ Nc = size(color_order, 1);
 figure;
 ax = subplot(1,1,1);
 ax.ColorOrder = color_order;
+
 %}
 
 mag_list = sort([0.7:0.025:1.2],'descend');
@@ -239,8 +241,8 @@ for imag = 1:length(mag_list)
         squeeze(log(mean(Yif_interest(l,c,bands) .* gp_int,[1,2],'omitnan')) ...
                 - log(mean(Yif_bland(ld,c,bands) .* gp_bland,[1,2],'omitnan'))*mag), ...
         '.-', 'DisplayName', sprintf('subtrahend x %.3f',mag), 'Markersize', 5, 'Color', color_order(rem(imag, Nc)+1, :));
-
 %}
+
 
 end
 

@@ -6,7 +6,7 @@ prop_name = 'trrdif';
 %% Get/download and process target image
 
 % Specify the observation ID of the image you want to test.
-obs_id_interest = '9A16';
+obs_id_interest = '5C5E';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;
@@ -76,7 +76,7 @@ valid_lines_int = find(valid_lines_int);
 %% Get/download and process bland image
 
 % Specify the observation ID of the image you want to test as bland.
-obs_id_bland = '9A98';
+obs_id_bland = '5DCB';
 
 % Set this to 2 if you need to download data, 0 otherwise.
 dwld = 2;

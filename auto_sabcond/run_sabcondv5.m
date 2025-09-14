@@ -6,8 +6,8 @@ function [] = run_sabcondv5(bland_id, target_id)
 
 hitran_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/mars_hitran';
 T_path = '/home/imadk/data/T';
-results_path = './v5_results';
-bland_results_path = './v5_bland_results';
+results_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v5_results';
+bland_results_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v5_bland_results';
 
 
 %% Batch processing of convolution.

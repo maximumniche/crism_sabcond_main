@@ -1,20 +1,19 @@
 
 %% check the results
-obs_id = '9A01';
+obs_id = '12D5E';
 crism_obs = CRISMObservation(obs_id,'sensor_id','L');
 TRR3dataset = CRISMTRRdataset(crism_obs.info.basenameIF,'');
-pdir5 = './v3_results0/';
+pdir5 = './v3_results/';
 dir_sab3 = joinPath(pdir5,TRR3dataset.trrbif.dirname);
 sabcond_data3 = SABCONDdataset(TRR3dataset.trrbif.basename, dir_sab3,...
     'suffix', 'sabcondpub_v1');
 % TRR3dataset.catif.readWAi_fromCRISMdata_parent();
-TRR3dataset.trrdif.wa = TRR3dataset.trrdif.wa / 1000;
 
 add_model_residual_absorption(sabcond_data3, obs_id)
 
 %%
 sabcond_data3.nr_ds.set_rgb();
-sabcond_data3.AB.wa = TRR3dataset.trrdif.wa;
+sabcond_data3.AB.wa = TRR3dataset.trrbif.wa;
 
 h1 = ENVIRasterMultview({sabcond_data3.nr_ds.RGB.CData_Scaled},{ ...
     ...{TRR3dataset.catif,'name','CAT IF','AVERAGE_WINDOW',[1,1]}, ...
@@ -23,7 +22,7 @@ h1 = ENVIRasterMultview({sabcond_data3.nr_ds.RGB.CData_Scaled},{ ...
     ...{sabcond_data3.residual,'name','v3 residual','AVERAGE_WINDOW',[1,1]}, ...
     ...{sabcond_data3.absorption,'name','v3 absorption','AVERAGE_WINDOW',[1,1]}, ...
     },...
-'SPC_XLIM',[1.100 2.600],...
+'SPC_XLIM',[1100 2600],...
 'varargin_ImageStackView',{'Ydir','reverse'});
 
 %%
