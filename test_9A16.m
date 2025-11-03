@@ -199,7 +199,7 @@ TRR3dataset.trr3if.load_basenamesCDR();
 WAdata = TRR3dataset.trr3if.readCDR('WA'); WAdata.readimgi();
 bands = crmsab_genBands_v2(WAdata.prop.wavelength_filter,6,WAdata.prop.binning,WAdata.prop.sclk);
 
-pdir5 = '/home/imadk/data/results/';
+pdir5 = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/results';
 dir_sab5 = joinPath(pdir5,TRR3dataset.trr3if.dirname);
 sabcond_data5_1 = SABCONDdataset(TRR3dataset.trrdif.basename,dir_sab5,...
     'suffix','sabcondpub_v1_mcd6_1s01_9A16');

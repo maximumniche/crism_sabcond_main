@@ -1,5 +1,5 @@
 global crism_env_vars
-obs_ids = {'3E12'};
+obs_ids = {'47A3'};
 
 for i=1:length(obs_ids)
 

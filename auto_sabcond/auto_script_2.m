@@ -89,6 +89,12 @@ for image_index=1:length(target_images)
                 continue;
             end
 
+            if ~compatible(i)
+                disp("Image not compatible. Bad candidate.")
+                bland(i) = 0;
+                continue;
+            end
+
             try
                 bland(i) = script_determine_blandness(viable_candidates{i});
             catch

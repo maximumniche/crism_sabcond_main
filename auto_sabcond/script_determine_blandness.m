@@ -18,8 +18,6 @@ DWLD_INDEX_CACHE_UPDATE = false;
 pdir = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v3_results';
 
 % Threshold values for noise rmse and absorption average
-threshold_noise = 0.01;
-threshold_absorption = 0.0045;
 threshold_fraction = 0.10;
 
 %% Set up v3 correction variables
@@ -239,13 +237,22 @@ absorption = sabcond_data3.absorption.readimg();
 residuals = sabcond_data3.residual.readimg();
 
 % Calculate noise RMSE
-rmse_noise = sqrt(mean((residuals(:)).^2, 'omitnan'));
+% rmse_noise = sqrt(mean((residuals(:)).^2, 'omitnan'));
 
+% Calculate noise l1 norm
+l1_noise = mean(abs(residuals(:)), 'omitnan');
 
 % Calculate a fractional count of strong pixels
 absorption_wavelengths = squeeze(mean(absorption, 3, 'omitnan')); % Calculate avg of absorption wavelengths
-strong = absorption_wavelengths(absorption_wavelengths > threshold_absorption);
+strong = absorption_wavelengths(absorption_wavelengths > l1_noise);
 strong_fraction = numel(strong) / numel(absorption_wavelengths);
+
+% Determine if image is bland based on comparison with l1
+if strong_fraction > threshold_fraction
+    blandBool = false;
+else
+    blandBool = true;
+end
 
 %{
 
@@ -258,6 +265,7 @@ absorption_avg = mean(absorption_avg, 'omitnan'); % get mean of wavelengths
 
 %}
 
+%{
 % Determine if image is bland based on two values
 if rmse_noise > threshold_noise % If noise RMSE is greater than noise threshold,
     % discard image as nonbland b/c too much noise indicates nonblandness
@@ -277,5 +285,5 @@ else % If not, check absorption_avg
     end
 
 end
-
-%end
+%}
+end
