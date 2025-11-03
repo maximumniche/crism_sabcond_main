@@ -1,0 +1,45 @@
+[submodule "auto_sabcond/toolboxes/base"]
+	path = auto_sabcond/toolboxes/base
+	url = https://github.com/yukiitohand/base
+[submodule "auto_sabcond/toolboxes/envi"]
+	path = auto_sabcond/toolboxes/envi
+	url = https://github.com/yukiitohand/envi
+[submodule "auto_sabcond/toolboxes/continuumRemoval"]
+	path = auto_sabcond/toolboxes/continuumRemoval
+	url = https://github.com/yukiitohand/continuumRemoval
+[submodule "auto_sabcond/toolboxes/optProp"]
+	path = auto_sabcond/toolboxes/optProp
+	url = https://github.com/yukiitohand/optProp
+[submodule "auto_sabcond/toolboxes/relab_toolbox"]
+	path = auto_sabcond/toolboxes/relab_toolbox
+	url = https://github.com/yukiitohand/relab_toolbox
+[submodule "auto_sabcond/toolboxes/suwab_toolbox"]
+	path = auto_sabcond/toolboxes/suwab_toolbox
+	url = https://github.com/yukiitohand/suwab_toolbox
+[submodule "auto_sabcond/toolboxes/pds3_toolbox"]
+	path = auto_sabcond/toolboxes/pds3_toolbox
+	url = https://github.com/yukiitohand/pds3_toolbox
+[submodule "auto_sabcond/toolboxes/mcd_toolbox"]
+	path = auto_sabcond/toolboxes/mcd_toolbox
+	url = https://github.com/yukiitohand/mcd_toolbox
+[submodule "auto_sabcond/toolboxes/crism_toolbox"]
+	path = auto_sabcond/toolboxes/crism_toolbox
+	url = https://github.com/yukiitohand/crism_toolbox
+[submodule "auto_sabcond/toolboxes/crism_calibration"]
+	path = auto_sabcond/toolboxes/crism_calibration
+	url = https://github.com/yukiitohand/crism_calibration
+[submodule "auto_sabcond/toolboxes/crism_conv_hitran"]
+	path = auto_sabcond/toolboxes/crism_conv_hitran
+	url = https://github.com/yukiitohand/crism_conv_hitran
+[submodule "auto_sabcond/toolboxes/crism_sabcond"]
+	path = auto_sabcond/toolboxes/crism_sabcond
+	url = https://github.com/yukiitohand/crism_sabcond
+[submodule "auto_sabcond/toolboxes/tetracorder"]
+	path = auto_sabcond/toolboxes/tetracorder
+	url = https://github.com/yukiitohand/tetracorder
+[submodule "auto_sabcond/toolboxes/export_fig"]
+	path = auto_sabcond/toolboxes/export_fig
+	url = https://github.com/altmany/export_fig
+[submodule "auto_sabcond/toolboxes/sc"]
+	path = auto_sabcond/toolboxes/sc
+	url = https://github.com/ojwoodford/sc
