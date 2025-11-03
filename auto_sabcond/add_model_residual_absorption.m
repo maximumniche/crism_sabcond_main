@@ -1,5 +1,5 @@
 
-%% Function to create a model and residual CRISMdataCAT property and append to SABCOND dataset object
+%% Function to create a model and residual CRISMdataCAT property and append to a SABCOND dataset object
 
 function [] = add_model_residual_absorption(dataset, obs_id)
 
