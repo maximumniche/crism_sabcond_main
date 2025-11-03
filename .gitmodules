@@ -43,3 +43,6 @@
 [submodule "auto_sabcond/toolboxes/sc"]
 	path = auto_sabcond/toolboxes/sc
 	url = https://github.com/ojwoodford/sc
+[submodule "auto_sabcond/mars_hitran"]
+	path = auto_sabcond/mars_hitran
+	url = https://github.com/yukiitohand/mars_hitran
