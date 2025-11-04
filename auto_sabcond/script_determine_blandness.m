@@ -15,7 +15,7 @@ dwld = 2;
 % index.html in the folder, set this to true
 DWLD_INDEX_CACHE_UPDATE = false;
 
-pdir = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v3_results';
+pdir = './v3_results';
 
 % Threshold values for noise rmse and absorption average
 threshold_fraction = 0.10;

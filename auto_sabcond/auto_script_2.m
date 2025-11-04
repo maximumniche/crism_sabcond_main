@@ -18,6 +18,7 @@ crism_init;
 for image_index=1:length(target_images)
 
     target_image = target_images{image_index};
+    blandPixels = bland_pixel_gen(target_image);
 
     %% While loop that reloops when there are no viable candidates
     
@@ -81,7 +82,7 @@ for image_index=1:length(target_images)
         for i=1:length(viable_candidates)
 
             try
-                [compatible(i), ~] = script_compare_images(target_image, viable_candidates{i});
+                [compatible(i), ~] = script_compare_images(target_image, viable_candidates{i}, blandPixels);
             catch
                 disp("Compatibility check threw error. Ignoring candidate.")
                 compatible(i) = 0;

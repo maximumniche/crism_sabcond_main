@@ -1,4 +1,4 @@
-function [compatibilityBool, rmse_min] = script_compare_images(obs_id_interest, obs_id_bland)
+function [compatibilityBool, rmse_min] = script_compare_images(obs_id_interest, obs_id_bland, blandPixels)
 
 %% Bland Image Selection
 % crism_init crismToolbox_legacy.json;
@@ -75,7 +75,6 @@ lnYif_interest = log(Yif_interest);
 % Ignore some lines where gimbal motion is stacked
 [valid_lines_int,valid_samples_int] = crism_examine_valid_LinesColumns(TRR3dataset_interest.trr3if);
 valid_lines_int = find(valid_lines_int);
-
 
 %% Get/download and process bland image
 
@@ -178,7 +177,7 @@ bands = 1:252;
 
 % Specify valid lines.
 ld = valid_lines; % ld = 200:400;
-
+l=valid_lines_int;
 
 % Specify column(s) and line(s) you want to test. 
 % Same column(s) is used for the bland image.
@@ -188,9 +187,9 @@ ld = valid_lines; % ld = 200:400;
 %c=1:size(lnYif_bland, 2);
 
 % Better random selection of columns, all rows
-l=valid_lines_int;
-numColumns = size(lnYif_bland, 2);
-c = randi(numColumns, 1, 10); % Select 10 random columns
+bestCols = mean(blandPixels, 1) > 0.95;
+bestCols = find(bestCols);
+c=bestCols;
 
 %{
 color_order = lines(7);
