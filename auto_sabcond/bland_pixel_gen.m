@@ -6,7 +6,7 @@ run_sabcondv3(obs_id)
 
 %% Determine blandness with RMSE Noise (cor - model) and absorption (Ab*Bg*Ice)
 
-obs_id = '9A16';
+% obs_id = '9A16';
 pdir = './v3_results';
 
 % Get observation info

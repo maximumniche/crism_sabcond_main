@@ -4,9 +4,12 @@ function [compatibilityBool, rmse_min] = script_compare_images(obs_id_interest, 
 % crism_init crismToolbox_legacy.json;
 prop_name = 'trrdif';
 
-threshold = 0.0006;
+threshold = 0.0007;
 
-
+% testing
+%blandPixels = bland_pixel_gen('47A3');
+%obs_id_interest = '47A3';
+%obs_id_bland = '4774';
 %% Get/download and process target image
 
 % Specify the observation ID of the image you want to test.
@@ -150,6 +153,9 @@ Yif_bland(Yif_bland<0) = nan;
 % returned.
 Yif_bland = crism_bin_image_frames(Yif_bland,'binx',TRR3dataset_interest.trr3if.lbl.PIXEL_AVERAGING_WIDTH);
 GP1nan_bland = crism_bin_image_frames(GP1nanfull_bland,'binx',TRR3dataset_interest.trr3if.lbl.PIXEL_AVERAGING_WIDTH);
+%Yif_bland = crism_bin_image_frames(Yif_bland,'binx',TRR3dataset_interest.trrdif.lbl.PIXEL_AVERAGING_WIDTH);
+%GP1nan_bland = crism_bin_image_frames(GP1nanfull_bland,'binx',TRR3dataset_interest.trrdif.lbl.PIXEL_AVERAGING_WIDTH);
+
 
 lnYif_bland = log(Yif_bland);
 
@@ -187,10 +193,23 @@ l=valid_lines_int;
 %c=1:size(lnYif_bland, 2);
 
 % Better random selection of columns, all rows
-bestCols = mean(blandPixels, 1) > 0.95;
-bestCols = find(bestCols);
-c=bestCols;
+%bestCols = mean(blandPixels, 1) > 0.95;
+%bestCols = find(bestCols);
+%c=bestCols;
 
+% Selection of random pixels to do ratioing
+[l, c] = find(blandPixels);
+%%
+amountPixels = size(l);
+amountPixels = amountPixels(1);
+
+if amountPixels > 1000
+    % Since using all pixels will kill memory if large amount, take random selection
+    indices = randi([1, amountPixels], [1000, 1]);
+    l = l(indices);
+    c = c(indices);
+end
+%%
 %{
 color_order = lines(7);
 color_order2 = [...         
@@ -221,7 +240,6 @@ normalized_bands = mean(TRR3dataset_interest.trr3ra.wa(bands,c),[2],'omitnan');
 % bands from 1900-2200 nm, where trident feature is
 trident_indexes = find(normalized_bands > 1800 & normalized_bands < 2200);
 
-
 % pList = [];
 
 for imag = 1:length(mag_list)
@@ -232,7 +250,7 @@ for imag = 1:length(mag_list)
     %            - log(mean(Yif_bland(ld,c,bands),[1,2],'omitnan'))*mag);
 
     data(:, imag) = squeeze(log(mean(Yif_interest(l,c,bands) .* gp_int,[1,2],'omitnan')) ...
-                - log(mean(Yif_bland(ld,c,bands) .* gp_bland,[1,2],'omitnan'))*mag);
+                - log(mean(Yif_bland(l,c,bands) .* gp_bland,[1,2],'omitnan'))*mag);
     
 %{
     plot(mean(TRR3dataset_interest.trr3ra.wa(bands,c),[2],'omitnan'),...
@@ -316,7 +334,6 @@ if rmse_min < threshold
     compatibilityBool = true;
 else
     compatibilityBool = false;
-
-
+end
 
 end

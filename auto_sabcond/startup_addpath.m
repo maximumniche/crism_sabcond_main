@@ -1,7 +1,7 @@
 function [] = startup_addpath()
 
-toolbox_root_dir = '/home/imadk/Documents/MATLAB/CRISM/toolbox';
-data_root_dir = '/home/imadk/Documents/MATLAB/CRISM/data';
+toolbox_root_dir = './toolboxes';
+data_root_dir = '.';
 
 addpath(fullfile(toolbox_root_dir,'base'));
 addpath(fullfile(toolbox_root_dir,'sc'));

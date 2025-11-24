@@ -18,7 +18,7 @@ DWLD_INDEX_CACHE_UPDATE = false;
 pdir = './v3_results';
 
 % Threshold values for noise rmse and absorption average
-threshold_fraction = 0.10;
+threshold_fraction = 0.20;
 
 %% Set up v3 correction variables
 % OPTIONS for sabcond

@@ -1,8 +1,9 @@
 %% Script to automate SABCOND V5
-% depth first search esque way of finding best candidate
+% depth first search esque way of finding best candidate and running
+% sabcond
 
 %% VARIABLE SETUP
-target_images = {'40FF'};
+target_images = {'9A16', '13F58', '5C5E', '31442','2FB79', '3E12'};
 skip_hitran = false; % whether you want to skip HITRAN or not, only eligible
                     % if HITRAN profiles are already generated
 tolerance = 1; % initial tolerance for ddr search

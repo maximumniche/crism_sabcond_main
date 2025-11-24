@@ -69,6 +69,9 @@ sabcond_data3_1 = SABCONDdataset(TRR3dataset.trrbif.basename,dir_sab3,...
 DEdata = CRISMDDRdata(obs_info.sgmnt_info(csi).L.ddr.DE{1}, '');
 crism_photocor_wrapper(sabcond_data3_1.nr_ds, DEdata);
 
+%% Empirical Geometric Normalization
+
+
 %% Replace values
 sabcond3_1_nr_ds_pht1 = CRISMdataCAT(...
     [sabcond_data3_1.nr_ds.basename, '_phot1'], ...

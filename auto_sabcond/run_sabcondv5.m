@@ -4,16 +4,16 @@ function [] = run_sabcondv5(bland_id, target_id)
 % bland_id = '4774';
 % target_id = '47A3';
 
-hitran_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/mars_hitran';
-T_path = '/home/imadk/data/T';
-results_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v5_results';
-bland_results_path = '/home/imadk/Documents/MATLAB/CRISM/crism_sabcond_main/auto_sabcond/v5_bland_results';
+hitran_path = '/mnt/data2/crism_user1/crism_sabcond_main/auto_sabcond/mars_hitran';
+T_path = '/mnt/data2/crism_user1/crism_sabcond_main/auto_sabcond/T';
+results_path = '/mnt/data2/crism_user1/crism_sabcond_main/auto_sabcond/v5_results';
+bland_results_path = '/mnt/data2/crism_user1/crism_sabcond_main/auto_sabcond/v5_bland_results';
 
 
 %% Batch processing of convolution.
 
 crism_convolve_hitran_abscoef(bland_id, ...
-    'ABSCOEF_DIR', hitran_path, 'mcd_ver', '6_1', 'max_nparallel', 16);
+    'ABSCOEF_DIR', hitran_path, 'SAVE_DIR', T_path, 'mcd_ver', '6_1', 'max_nparallel', 26);
 
 %%
 crism_obs_ref = CRISMObservation(bland_id,'SENSOR_ID','L');
